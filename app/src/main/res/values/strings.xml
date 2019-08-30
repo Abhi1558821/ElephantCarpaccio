@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">ElephantCarpaccio</string>
+    <string name="no_records_available">No records available. Please use below (+) icon to add the item.</string>
+    <string name="splash_ui_text">Kata Elephant Carpaccio Exercise</string>
+    <string name="add_item">Add Item</string>
+    <string name="item_name">Item name</string>
+    <string name="quantity">Quantity</string>
+    <string name="unit_price">Unit Price</string>
+    <string name="save">Save</string>
+    <string name="total_without_discount">Total without discount:</string>
+    <string name="discount">Discount:</string>
+    <string name="tax">Tax:</string>
+    <string name="total_price">Total Price:</string>
+    <string name="name">Name</string>
+    <string name="negative_value">-</string>
+    <string name="plus_value">+</string>
+    <string name="please_enter_name">Please enter the item name</string>
+    <string name="please_enter_quantity">Please enter the quantity</string>
+    <string name="please_enter_price">Please enter the unit price</string>
+    <string name="please_enter_state">Please select the state</string>
 </resources>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_black"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/textview_total_lable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/textview_total_value"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="start"
+        android:textSize="@dimen/sp_14"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:padding="@dimen/dp_8"
+        android:text="@string/total_without_discount" />
+
+    <TextView
+        android:id="@+id/textview_total_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/textview_total_lable"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="start"
+        android:padding="@dimen/dp_8"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/textview_discount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/textview_discount_value"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_total_value"
+        android:gravity="start"
+        android:padding="@dimen/dp_8"
+        android:textSize="@dimen/sp_14"
+        android:maxLines="1"
+        android:text="@string/discount"/>
+
+    <TextView
+        android:id="@+id/textview_discount_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/textview_discount"
+        app:layout_constraintTop_toBottomOf="@+id/textview_total_value"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="start"
+        android:padding="@dimen/dp_8"
+        android:textSize="@dimen/sp_14"/>
+
+    <TextView
+        android:id="@+id/textview_tax"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/textview_discount_value"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_discount"
+        android:gravity="start"
+        android:textSize="@dimen/sp_14"
+        android:padding="@dimen/dp_8"
+        android:maxLines="1"
+        android:text="@string/tax"/>
+
+    <TextView
+        android:id="@+id/textview_tax_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/textview_discount"
+        app:layout_constraintTop_toBottomOf="@+id/textview_discount_value"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="start"
+        android:padding="@dimen/dp_8"
+        android:textSize="@dimen/sp_14" />
+    <TextView
+        android:id="@+id/textview_total_payable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/textview_discount_value"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_tax"
+        android:gravity="start"
+        android:textSize="@dimen/sp_14"
+        android:padding="@dimen/dp_8"
+        android:maxLines="1"
+        android:text="@string/total_price"/>
+
+    <TextView
+        android:id="@+id/textview_total_payable_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/textview_discount"
+        app:layout_constraintTop_toBottomOf="@+id/textview_tax_value"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="start"
+        android:padding="@dimen/dp_8"
+        android:textSize="@dimen/sp_14"/>
+
+</android.support.constraint.ConstraintLayout>

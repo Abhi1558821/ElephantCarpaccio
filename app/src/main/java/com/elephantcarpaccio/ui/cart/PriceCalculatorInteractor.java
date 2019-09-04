@@ -1,6 +1,8 @@
 package com.elephantcarpaccio.ui.cart;
 
+import com.elephantcarpaccio.db.AppDatabase;
 import com.elephantcarpaccio.model.Item;
+import com.elephantcarpaccio.model.StateTax;
 import com.elephantcarpaccio.utils.Constants;
 
 import java.math.BigDecimal;
@@ -9,9 +11,14 @@ import java.util.List;
 
 public class PriceCalculatorInteractor implements CartContract.PriceCalculator {
 
+    private AppDatabase database;
+
+    public PriceCalculatorInteractor(AppDatabase appDatabase) {
+        this.database = appDatabase;
+    }
+
     @Override
     public double getTotalPrice(List<Item> itemList) {
-
         double totalPrice = 0;
         for (Item item : itemList) {
             totalPrice += getPrice(item);
@@ -36,8 +43,9 @@ public class PriceCalculatorInteractor implements CartContract.PriceCalculator {
 
     @Override
     public double getTaxValue(Item item) {
+        StateTax stateTax = database.stateTaxModel().getStateTaxFromState(item.getState());
         double taxValue;
-        double taxRate = item.getStateTax().getTaxRate();
+        double taxRate = stateTax.getTaxRate();
         taxValue = (getPrice(item) * taxRate) / 100;
         return getFormattedDoubleValue(taxValue);
     }

@@ -28,4 +28,6 @@ public final class Constants {
     public static final String EMPTY = "";
 
     public static final int ADD_USER_ITEM = 100;
+
+    public static final String ITEM_ID = "item_id";
 }

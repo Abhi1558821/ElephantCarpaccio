@@ -20,14 +20,19 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_FOOTER = 1;
     private static final int TYPE_ITEM = 2;
-    private final List<Item> itemList;
+    private List<Item> itemList;
     private final CartContract.PriceCalculator cartCalculator;
+    private CartContract.OnItemClickListener onItemClickListener;
 
-    public CartAdapter(CartContract.PriceCalculator interactor, List<Item> arrayList) {
-        this.itemList = arrayList;
+    public CartAdapter(CartContract.PriceCalculator interactor, CartContract.OnItemClickListener onItemClickListener) {
         this.cartCalculator = interactor;
+        this.onItemClickListener = onItemClickListener;
     }
 
+    public void setItemList(List<Item> itemList) {
+        this.itemList = itemList;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
@@ -62,7 +67,12 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (CartItemViewHolder.class.isInstance(holder)) {
 
             ((CartItemViewHolder) holder).setData(itemList.get(position - 1), cartCalculator);
+            holder.itemView.setOnClickListener(v -> onItemClickListener.clickItem(itemList.get(position - 1)));
 
+            holder.itemView.setOnLongClickListener(v -> {
+                onItemClickListener.clickLongItem(itemList.get(position - 1));
+                return false;
+            });
         } else if (CartHeaderHolder.class.isInstance(holder)) {
 
             ((CartHeaderHolder) holder).setData();

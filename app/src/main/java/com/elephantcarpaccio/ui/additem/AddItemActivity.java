@@ -1,5 +1,6 @@
 package com.elephantcarpaccio.ui.additem;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,14 +13,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.elephantcarpaccio.R;
+import com.elephantcarpaccio.db.AppDatabase;
 import com.elephantcarpaccio.model.Item;
 import com.elephantcarpaccio.model.StateTax;
-import com.elephantcarpaccio.utils.CartItemUtils;
-import com.elephantcarpaccio.utils.StringUtils;
+import com.elephantcarpaccio.utils.Constants;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
 public class AddItemActivity extends AppCompatActivity implements AddItemContract.View {
@@ -30,28 +28,54 @@ public class AddItemActivity extends AppCompatActivity implements AddItemContrac
     private Spinner spState;
     private Button btnSave;
     private AddItemContract.Presenter userInputPresenter;
-    private List<StateTax> stateTaxList;
+    private Item item;
+    private List<String> stateTaxList;
+    private boolean isForEdit;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_input);
 
+
         initialiseUI();
+
+        item = new Item();
+
+        AppDatabase database = AppDatabase.getDatabase(getApplication());
+
+        userInputPresenter = new AddItemPresenter(this, database.itemModel(), database.stateTaxModel());
 
         setSpinnerDataForState();
 
-        userInputPresenter = new AddItem(this, CartItemUtils.getInstance());
-
         btnSave.setOnClickListener((View v) -> validateAndSubmitItem());
+
+        isForEdit = isForEdit();
+
+        if (isForEdit) {
+            userInputPresenter.retrieveItem(item.id);
+            toolbar.setTitle(getResources().getString(R.string.update_item));
+        } else {
+            toolbar.setTitle(getResources().getString(R.string.add_item));
+        }
+    }
+
+    private boolean isForEdit() {
+        if (getIntent().getExtras() != null) {
+            item.id = getIntent().getLongExtra(Constants.ITEM_ID, 0);
+            return true;
+        }
+        return false;
     }
 
     // Initialise all UI components
     private void initialiseUI() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         etItemName = findViewById(R.id.et_lable_name);
         etItemUnitPrice = findViewById(R.id.et_unit_price);
@@ -67,7 +91,7 @@ public class AddItemActivity extends AppCompatActivity implements AddItemContrac
         String itemName = etItemName.getText().toString().trim();
         String itemQuantity = etItemQuantity.getText().toString().trim();
         String itemPrice = etItemUnitPrice.getText().toString().trim();
-        StateTax stateTax = (StateTax) spState.getSelectedItem();
+        String state = (String) spState.getSelectedItem();
 
         if (!userInputPresenter.validateItemName(itemName)) {
             etItemName.setError(getString(R.string.please_enter_name));
@@ -87,18 +111,22 @@ public class AddItemActivity extends AppCompatActivity implements AddItemContrac
             return;
         }
 
-        if (!userInputPresenter.validateState(stateTax)) {
+        if (!userInputPresenter.validateState(state)) {
             showInputError(getString(R.string.please_enter_state));
             setFocus(spState);
             return;
         }
 
         //Create the user Item and save.
-        Item item = new Item();
         item.setItemName(itemName);
         item.setItemQuantity(Integer.parseInt(itemQuantity));
         item.setItemUnitPrice(Double.parseDouble(itemPrice));
-        item.setStateTax(stateTax);
+        item.setState(state);
+
+        if (isForEdit) {
+            userInputPresenter.updateItem(item);
+            return;
+        }
         userInputPresenter.saveItem(item);
     }
 
@@ -108,16 +136,12 @@ public class AddItemActivity extends AppCompatActivity implements AddItemContrac
      * Data set to the spinner
      */
     private void setSpinnerDataForState() {
-        try {
-            String stateTaxes = StringUtils.readRawResource(this, R.raw.state_tax);
-            stateTaxList = StateTax.createStateTaxList(stateTaxes);
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
-        ArrayAdapter<StateTax> adapter = new ArrayAdapter<>(AddItemActivity.this,
+        stateTaxList = userInputPresenter.getAllStates();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(AddItemActivity.this,
                 android.R.layout.simple_spinner_item, stateTaxList);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spState.setAdapter(adapter);
     }
 
@@ -141,5 +165,13 @@ public class AddItemActivity extends AppCompatActivity implements AddItemContrac
     public void close() {
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    public void displayUI(Item item) {
+        etItemName.setText(item.getItemName());
+        etItemQuantity.setText(String.valueOf(item.getItemQuantity()));
+        etItemUnitPrice.setText(String.valueOf(item.getItemUnitPrice()));
+        spState.setSelection(stateTaxList.indexOf(item.getState()));
     }
 }

@@ -1,8 +1,7 @@
 package com.elephantcarpaccio.ui.cart;
 
+import com.elephantcarpaccio.db.dao.ItemDAO;
 import com.elephantcarpaccio.model.Item;
-import com.elephantcarpaccio.model.StateTax;
-import com.elephantcarpaccio.utils.CartItemUtils;
 
 /**
  * Presenter implementation for CartActivity
@@ -10,28 +9,43 @@ import com.elephantcarpaccio.utils.CartItemUtils;
 public class CartPresenter implements CartContract.Presenter {
 
     private CartContract.View view;
-    private CartItemUtils cartItemUtils;
+    private ItemDAO itemDAO;
 
-    public CartPresenter(CartContract.View view, CartItemUtils cartItemUtils) {
+    CartPresenter(CartContract.View view, ItemDAO itemDAO) {
         this.view = view;
-        this.cartItemUtils = cartItemUtils;
+        this.itemDAO = itemDAO;
     }
 
     @Override
-    public void setItemList() {
-        if (!cartItemUtils.getUserAddedItems().isEmpty()) {
+    public void retrieveItemList() {
+        itemDAO.getAllItem().observeForever(itemList -> {
+            if (itemList == null || itemList.size() < 1) {
+                view.displayNoRecords();
+                return;
+            }
             view.displayRecyclerView();
-            view.setItems(cartItemUtils.getUserAddedItems());
-        } else {
-            view.displayNoRecords();
-        }
-
+            view.setItems(itemList);
+        });
     }
 
     @Override
     public void clearItems() {
-        if (!cartItemUtils.getUserAddedItems().isEmpty()) {
-            cartItemUtils.clearAllItems();
-        }
+        itemDAO.deleteAll();
+    }
+
+    @Override
+    public void openEditScreen(Item item) {
+        view.showEditScreen(item.id);
+    }
+
+    @Override
+    public void openConfirmDeleteDialog(Item item) {
+        view.showDeleteConfirmDialog(item);
+    }
+
+    @Override
+    public void delete(long itemId) {
+        Item item = itemDAO.getItemFromId(itemId);
+        itemDAO.deleteItem(item);
     }
 }

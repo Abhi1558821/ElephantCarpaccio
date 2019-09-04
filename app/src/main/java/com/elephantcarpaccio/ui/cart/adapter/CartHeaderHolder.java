@@ -31,6 +31,6 @@ class CartHeaderHolder extends RecyclerView.ViewHolder {
         txtvwHeaderName.setText(itemView.getContext().getString(R.string.name));//if position is 0 set txtvwHeaderName to header view
         txtvwHeaderQuantity.setText(itemView.getContext().getString(R.string.quantity));
         txtHeaderUnitPrice.setText(itemView.getContext().getString(R.string.unit_price));
-        txtHeaderTotal.setText(itemView.getContext().getString(R.string.total_price));
+        txtHeaderTotal.setText(itemView.getContext().getString(R.string.total));
     }
 }

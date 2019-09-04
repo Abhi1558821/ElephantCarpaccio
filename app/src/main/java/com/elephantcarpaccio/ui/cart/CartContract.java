@@ -17,6 +17,10 @@ public interface CartContract {
          */
         void displayNoRecords();
 
+        void showEditScreen(long id);
+
+        void showDeleteConfirmDialog(Item item);
+
         /**
          * If user cart contains items then display recycler view
          */
@@ -27,9 +31,33 @@ public interface CartContract {
         /**
          * Set collection of {@link Item} objects to view
          */
-        void setItemList();
+        void retrieveItemList();
 
+        /**
+         * Delete all the {@link Item} objects from database
+         */
         void clearItems();
+
+        /**
+         * Method used to edit the selected @{@link Item} object
+         *
+         * @param item selected @{@link Item} object which needs to edit
+         */
+        void openEditScreen(Item item);
+
+        /**
+         * Open confirmation dialog to delete the selected @{@link Item} object from database
+         *
+         * @param item the selected @{@link Item} object
+         */
+        void openConfirmDeleteDialog(Item item);
+
+        /**
+         * Delete the selected @{@link Item} object from database
+         *
+         * @param itemId the selected @{@link Item} object's itemId
+         */
+        void delete(long itemId);
     }
 
     interface PriceCalculator {
@@ -89,5 +117,31 @@ public interface CartContract {
          * @return A final total price with discount and tax.
          */
         double getPayableValue(List<Item> itemList);
+    }
+
+    interface OnItemClickListener {
+        /**
+         * Invoked this method when user clicks on any @{@link Item} from cart to
+         * perform edit operation.
+         * @param item object selected by user
+         */
+        void clickItem(Item item);
+
+        /**
+         * Invoked this method when user long clicks on any @{@link Item} from cart to
+         * perform delete operation.
+         * @param item object selected by user
+         */
+        void clickLongItem(Item item);
+    }
+
+    interface DeleteListener {
+        /**
+         * Method invoke when user agree to delete the item
+         * @param confirm boolean value to confirm the delete
+         * @param itemId of selected @{@link Item} to delete
+         */
+        void setConfirm(boolean confirm, long itemId);
+
     }
 }

@@ -1,5 +1,8 @@
 package com.elephantcarpaccio.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
@@ -12,11 +15,17 @@ import java.util.List;
 /**
  * Model representation of a for a StateTax.
  */
+@Entity(tableName = "state_tax")
 public class StateTax {
 
     // Model Keys
+    @Ignore
     private static final String KEY_STATE = "state";
+    @Ignore
     private static final String KEY_TAX = "tax";
+
+    @PrimaryKey(autoGenerate = true)
+    public long id;
 
     private String state;
 
@@ -95,7 +104,6 @@ public class StateTax {
         StateTax question = new StateTax();
         question.setState(jsonObject.getString(StateTax.KEY_STATE));
         question.setTaxRate(jsonObject.getDouble(StateTax.KEY_TAX));
-
         return question;
     }
 }

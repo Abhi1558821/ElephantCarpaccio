@@ -1,13 +1,15 @@
 package com.elephantcarpaccio.ui.cart.adapter;
 
+import com.elephantcarpaccio.db.AppDatabase;
 import com.elephantcarpaccio.model.Item;
-import com.elephantcarpaccio.model.StateTax;
 import com.elephantcarpaccio.ui.cart.CartContract;
 import com.elephantcarpaccio.ui.cart.PriceCalculatorInteractor;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +22,24 @@ public class CartAdapterTest {
 
     private CartAdapter cartAdapter;
 
-    private CartContract.PriceCalculator presenter;
+    @Mock
+    private AppDatabase appDatabase;
 
     @Before
     public void setUp() {
+        MockitoAnnotations.initMocks(this);
         itemList = new ArrayList<>();
 
         Item item = new Item();
         item.setItemName("ABC");
         item.setItemQuantity(10);
         item.setItemUnitPrice(100.00f);
-        item.setStateTax(new StateTax());
+        item.setState("Alabama");
 
         itemList.add(item);
-        presenter = new PriceCalculatorInteractor();
-        cartAdapter = new CartAdapter(presenter, itemList);
+        CartContract.PriceCalculator presenter = new PriceCalculatorInteractor(appDatabase);
+        cartAdapter = new CartAdapter(presenter);
+        cartAdapter.setItemList(itemList);
     }
 
     @After
@@ -51,6 +56,5 @@ public class CartAdapterTest {
     public void getItemViewType() {
         assertEquals("View type didn't match", 0, cartAdapter.getItemViewType(0));
         assertEquals("View type didn't match", 1, cartAdapter.getItemViewType(2));
-
     }
 }

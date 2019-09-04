@@ -25,6 +25,9 @@ public class CartAdapterTest {
     @Mock
     private AppDatabase appDatabase;
 
+    @Mock
+    private CartContract.OnItemClickListener onItemClickListener;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -38,7 +41,7 @@ public class CartAdapterTest {
 
         itemList.add(item);
         CartContract.PriceCalculator presenter = new PriceCalculatorInteractor(appDatabase);
-        cartAdapter = new CartAdapter(presenter);
+        cartAdapter = new CartAdapter(presenter, onItemClickListener);
         cartAdapter.setItemList(itemList);
     }
 

@@ -31,7 +31,6 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setItemList(List<Item> itemList) {
         this.itemList = itemList;
-        notifyDataSetChanged();
     }
 
     @Override

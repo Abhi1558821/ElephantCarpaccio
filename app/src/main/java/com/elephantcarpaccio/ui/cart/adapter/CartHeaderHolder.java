@@ -15,7 +15,7 @@ class CartHeaderHolder extends RecyclerView.ViewHolder {
 
     CartHeaderHolder(View itemView) {
         super(itemView);
-
+        itemView.setClickable(false);
         this.txtvwHeaderName = itemView.findViewById(R.id.textview_name);
         this.txtHeaderUnitPrice = itemView.findViewById(R.id.textview_unit_price);
         this.txtvwHeaderQuantity = itemView.findViewById(R.id.textview_quantity);

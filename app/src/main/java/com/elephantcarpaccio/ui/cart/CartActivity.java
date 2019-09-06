@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -49,9 +48,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
 
         rvCart = findViewById(R.id.rv_items);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        DividerItemDecoration dividerItemDecorationVertical = new DividerItemDecoration(rvCart.getContext(), DividerItemDecoration.VERTICAL);
-        rvCart.addItemDecoration(dividerItemDecorationVertical);
         rvCart.setLayoutManager(linearLayoutManager);
+        rvCart.setHasFixedSize(true);
         rvCart.setItemAnimator(new DefaultItemAnimator());
         cartAdapter = new CartAdapter(new PriceCalculatorInteractor(database), this);
         rvCart.setAdapter(cartAdapter);

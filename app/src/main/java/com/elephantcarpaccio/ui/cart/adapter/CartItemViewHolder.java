@@ -24,10 +24,10 @@ class CartItemViewHolder extends RecyclerView.ViewHolder {
         this.txtvwTotal = view.findViewById(R.id.textview_total);
     }
 
-    void setData(Item item, CartContract.PriceCalculator cartCalculator) {
+    void setData(Item item) {
         txtvwName.setText(item.getItemName());//For getting data from array use -1 for getting correct data
         txtvwQuantity.setText(String.valueOf(item.getItemQuantity()));
         txtvwUnitPrice.setText(String.format(Locale.US, "%.2f", item.getItemUnitPrice()));
-        txtvwTotal.setText(String.format(Locale.US, "%.2f", cartCalculator.getPrice(item)));
+        txtvwTotal.setText(String.format(Locale.US, "%.2f", item.getPrice()));
     }
 }

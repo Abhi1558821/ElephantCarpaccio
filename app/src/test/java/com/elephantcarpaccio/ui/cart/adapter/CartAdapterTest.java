@@ -3,7 +3,6 @@ package com.elephantcarpaccio.ui.cart.adapter;
 import com.elephantcarpaccio.db.AppDatabase;
 import com.elephantcarpaccio.model.Item;
 import com.elephantcarpaccio.ui.cart.CartContract;
-import com.elephantcarpaccio.ui.cart.PriceCalculatorInteractor;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,8 +39,8 @@ public class CartAdapterTest {
         item.setState("Alabama");
 
         itemList.add(item);
-        CartContract.PriceCalculator presenter = new PriceCalculatorInteractor(appDatabase);
-        cartAdapter = new CartAdapter(presenter, onItemClickListener);
+//        CartContract.PriceCalculator presenter = new PriceCalculatorInteractor(appDatabase);
+//        cartAdapter = new CartAdapter(presenter, onItemClickListener);
         cartAdapter.setItemList(itemList);
     }
 

@@ -25,7 +25,7 @@ class CartFooterHolder extends RecyclerView.ViewHolder {
         this.txtvwPayable = itemView.findViewById(R.id.textview_total_payable_value);
     }
 
-    void setData(List<Item> itemList, CartContract.PriceCalculator cartCalculator) {
+    void setData(List<Item> itemList, CartContract.Presenter cartCalculator) {
         double totalValue = cartCalculator.getTotalPrice(itemList);
         double discountValue = cartCalculator.getDiscountValue(totalValue);
         double taxValue = cartCalculator.getTotalTaxValue(itemList);

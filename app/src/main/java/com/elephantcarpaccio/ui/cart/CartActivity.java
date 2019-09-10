@@ -25,6 +25,7 @@ import java.util.List;
 public class CartActivity extends AppCompatActivity implements CartContract.View, CartContract.OnItemClickListener, CartContract.DeleteListener {
     private RecyclerView rvCart;
     private CartContract.Presenter presenter;
+    private CartContract.CartInteractor cartInterActor;
     private TextView textViewNoRecords;
     private CartAdapter cartAdapter;
     private AppDatabase database;
@@ -35,8 +36,8 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         setContentView(R.layout.activity_cart);
 
         database = AppDatabase.getDatabase(getApplication());
-
-        presenter = new CartPresenter(this, database.itemModel());
+        cartInterActor = new CartInteractor();
+        presenter = new CartPresenter(this,cartInterActor, database);
 
         initialiseUI();
     }
@@ -51,7 +52,7 @@ public class CartActivity extends AppCompatActivity implements CartContract.View
         rvCart.setLayoutManager(linearLayoutManager);
         rvCart.setHasFixedSize(true);
         rvCart.setItemAnimator(new DefaultItemAnimator());
-        cartAdapter = new CartAdapter(new PriceCalculatorInteractor(database), this);
+        cartAdapter = new CartAdapter(presenter, this);
         rvCart.setAdapter(cartAdapter);
 
         textViewNoRecords = findViewById(R.id.txtvw_no_records);

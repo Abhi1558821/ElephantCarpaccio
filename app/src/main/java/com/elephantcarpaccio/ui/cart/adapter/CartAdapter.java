@@ -21,10 +21,10 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_FOOTER = 1;
     private static final int TYPE_ITEM = 2;
     private List<Item> itemList;
-    private final CartContract.PriceCalculator cartCalculator;
+    private final CartContract.Presenter cartCalculator;
     private CartContract.OnItemClickListener onItemClickListener;
 
-    public CartAdapter(CartContract.PriceCalculator interactor, CartContract.OnItemClickListener onItemClickListener) {
+    public CartAdapter(CartContract.Presenter interactor, CartContract.OnItemClickListener onItemClickListener) {
         this.cartCalculator = interactor;
         this.onItemClickListener = onItemClickListener;
     }
@@ -65,7 +65,7 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //If instance is CartItemViewHolder the type is Item do your stuff over here
         if (CartItemViewHolder.class.isInstance(holder)) {
 
-            ((CartItemViewHolder) holder).setData(itemList.get(position - 1), cartCalculator);
+            ((CartItemViewHolder) holder).setData(itemList.get(position - 1));
             holder.itemView.setOnClickListener(v -> onItemClickListener.clickItem(itemList.get(position - 1)));
 
             holder.itemView.setOnLongClickListener(v -> {

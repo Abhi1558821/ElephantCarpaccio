@@ -9,26 +9,19 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-public class PriceCalculatorInteractor implements CartContract.PriceCalculator {
+public class CartInteractor implements CartContract.CartInteractor {
 
     private AppDatabase database;
+    private CartContract.Presenter presenter;
 
-    public PriceCalculatorInteractor(AppDatabase appDatabase) {
+    @Override
+    public void setDatabase(AppDatabase appDatabase) {
         this.database = appDatabase;
     }
 
     @Override
-    public double getTotalPrice(List<Item> itemList) {
-        double totalPrice = 0;
-        for (Item item : itemList) {
-            totalPrice += getPrice(item);
-        }
-        return getFormattedDoubleValue(totalPrice);
-    }
-
-    @Override
-    public double getPrice(Item item) {
-        return item.getItemQuantity() * item.getItemUnitPrice();
+    public void setPresenter(CartContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 
     @Override
@@ -46,9 +39,21 @@ public class PriceCalculatorInteractor implements CartContract.PriceCalculator {
         StateTax stateTax = database.stateTaxModel().getStateTaxFromState(item.getState());
         double taxValue;
         double taxRate = stateTax.getTaxRate();
-        taxValue = (getPrice(item) * taxRate) / 100;
+        taxValue = (item.getPrice() * taxRate) / 100;
         return getFormattedDoubleValue(taxValue);
     }
+
+    @Override
+    public void retrieveItemList() {
+        database.itemModel().getAllItem().observeForever(itemList -> presenter.onItemListReceived(itemList));
+    }
+
+    @Override
+    public void delete(long itemId) {
+        Item item = database.itemModel().getItemFromId(itemId);
+        database.itemModel().deleteItem(item);
+    }
+
 
     @Override
     public double getDiscountValue(double totalValue) {
@@ -91,12 +96,21 @@ public class PriceCalculatorInteractor implements CartContract.PriceCalculator {
     }
 
     @Override
+    public double getTotalPrice(List<Item> itemList) {
+        double totalPrice = 0;
+        for (Item item : itemList) {
+            totalPrice += item.getPrice();
+        }
+        return getFormattedDoubleValue(totalPrice);
+    }
+
+    @Override
     public double getPayableValue(List<Item> itemList) {
         double totalPrice = 0;
         double totalTax = 0;
 
         for (Item item : itemList) {
-            totalPrice += getPrice(item);
+            totalPrice += item.getPrice();
             totalTax += getTaxValue(item);
         }
         return getFormattedDoubleValue(totalPrice + totalTax - getDiscountValue(totalPrice));

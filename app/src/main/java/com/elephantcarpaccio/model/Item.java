@@ -51,4 +51,8 @@ public class Item {
     public void setState(String state) {
         this.state = state;
     }
+
+    public double getPrice(){
+        return getItemUnitPrice() * getItemQuantity();
+    }
 }

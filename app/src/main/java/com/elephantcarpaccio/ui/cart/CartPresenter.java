@@ -1,7 +1,9 @@
 package com.elephantcarpaccio.ui.cart;
 
-import com.elephantcarpaccio.db.dao.ItemDAO;
+import com.elephantcarpaccio.db.AppDatabase;
 import com.elephantcarpaccio.model.Item;
+
+import java.util.List;
 
 /**
  * Presenter implementation for CartActivity
@@ -9,28 +11,18 @@ import com.elephantcarpaccio.model.Item;
 public class CartPresenter implements CartContract.Presenter {
 
     private CartContract.View view;
-    private ItemDAO itemDAO;
+    private CartContract.CartInteractor cartInteractor;
 
-    CartPresenter(CartContract.View view, ItemDAO itemDAO) {
+    CartPresenter(CartContract.View view, CartContract.CartInteractor cartInteractor, AppDatabase appDatabase) {
         this.view = view;
-        this.itemDAO = itemDAO;
+        this.cartInteractor = cartInteractor;
+        this.cartInteractor.setDatabase(appDatabase);
+        this.cartInteractor.setPresenter(this);
     }
 
     @Override
     public void retrieveItemList() {
-        itemDAO.getAllItem().observeForever(itemList -> {
-            if (itemList == null || itemList.size() < 1) {
-                view.displayNoRecords();
-                return;
-            }
-            view.displayRecyclerView();
-            view.setItems(itemList);
-        });
-    }
-
-    @Override
-    public void clearItems() {
-        itemDAO.deleteAll();
+        cartInteractor.retrieveItemList();
     }
 
     @Override
@@ -45,7 +37,41 @@ public class CartPresenter implements CartContract.Presenter {
 
     @Override
     public void delete(long itemId) {
-        Item item = itemDAO.getItemFromId(itemId);
-        itemDAO.deleteItem(item);
+        cartInteractor.delete(itemId);
+    }
+
+    @Override
+    public double getTotalPrice(List<Item> itemList) {
+        return cartInteractor.getTotalPrice(itemList);
+    }
+
+    @Override
+    public double getTotalTaxValue(List<Item> itemList) {
+        return cartInteractor.getTotalTaxValue(itemList);
+    }
+
+    @Override
+    public double getTaxValue(Item item) {
+        return cartInteractor.getTaxValue(item);
+    }
+
+    @Override
+    public double getDiscountValue(double totalValue) {
+        return cartInteractor.getDiscountValue(totalValue);
+    }
+
+    @Override
+    public double getPayableValue(List<Item> itemList) {
+        return cartInteractor.getPayableValue(itemList);
+    }
+
+    @Override
+    public void onItemListReceived(List<Item> itemList) {
+        if (itemList == null || itemList.size() < 1) {
+            view.displayNoRecords();
+            return;
+        }
+        view.displayRecyclerView();
+        view.setItems(itemList);
     }
 }

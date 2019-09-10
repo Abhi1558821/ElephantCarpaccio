@@ -42,8 +42,8 @@ public class AddItemPresenterTest {
     @Test
     public void saveItem() {
         userInpuPresenter.saveItem(item);
+        Mockito.verify(itemDAO).insertItem(item);
         Mockito.verify(view).close();
-//        Mockito.verify(cartItemUtils).addItem(item);
     }
 
     @Test
@@ -68,5 +68,26 @@ public class AddItemPresenterTest {
     public void validateStateTest() {
         assertFalse(userInpuPresenter.validateState(""));
         assertTrue(userInpuPresenter.validateState("Alabama"));
+    }
+
+    @Test
+    public void getAllStates(){
+        userInpuPresenter.getAllStates();
+        Mockito.verify(stateTaxDAO).getStatesList();
+    }
+
+    @Test
+    public void retrieveItemTest() {
+        Mockito.when(itemDAO.getItemFromId(1)).thenReturn(item);
+        userInpuPresenter.retrieveItem(1);
+        Mockito.verify(itemDAO).getItemFromId(1);
+        Mockito.verify(view).displayUI(item);
+    }
+
+    @Test
+    public void updateItem() {
+        userInpuPresenter.updateItem(item);
+        Mockito.verify(itemDAO).updateItem(item);
+        Mockito.verify(view).close();
     }
 }
